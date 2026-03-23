@@ -1,10 +1,10 @@
-
 @import "./cotton_candy.bundle.css";
 @import "./cherry.bundle.css";
 @import "./apricot.bundle.css";
 @import "./watermelon.bundle.css";
+@import "./odoo.bundle.css";
 
-.app-logo{
+.app-logo {
     min-height: 55px !important;
     width: auto !important;
 }

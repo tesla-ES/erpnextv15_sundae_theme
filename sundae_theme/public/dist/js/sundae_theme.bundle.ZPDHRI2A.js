@@ -42,6 +42,11 @@
             name: "watermelon",
             label: "Watermelon",
             info: "watermelon Theme"
+          },
+          {
+            name: "odoo",
+            label: "Odoo Theme",
+            info: "Odoo Theme"
           }
         ];
         resolve(this.themes);

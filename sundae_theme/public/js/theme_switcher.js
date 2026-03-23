@@ -45,7 +45,7 @@ frappe.ui.ThemeSwitcher = class CustomThemeSwitcher extends frappe.ui.ThemeSwitc
                 },
                 {
                     name: "odoo",
-                    label: "Odoo",
+                    label: "Odoo Theme",
                     info: "Odoo Theme"
                 }
             ];
