@@ -1,0 +1,103 @@
+/* Login Page Styles for Sundae Theme */
+
+:root {
+    --sundae-blue: #2567B5;
+    --sundae-pink: #fecdd3;
+    --sundae-orange: #ffa00a;
+    --sundae-purple: #714B67;
+}
+
+.page-login {
+    background: linear-gradient(-45deg, #2567B5, #be123c, #ffa00a, #714B67);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes gradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.for-login .login-content {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border-radius: 24px !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
+    padding: 3rem !important;
+    max-width: 450px !important;
+    width: 90% !important;
+}
+
+.for-login .login-heading {
+    color: var(--sundae-purple) !important;
+    font-weight: 800 !important;
+    font-size: 2rem !important;
+    margin-bottom: 2rem !important;
+    text-align: center;
+}
+
+.for-login .form-control {
+    background: rgba(255, 255, 255, 0.5) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 12px 16px !important;
+    transition: all 0.3s ease;
+}
+
+.for-login .form-control:focus {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: var(--sundae-purple) !important;
+    box-shadow: 0 0 0 4px rgba(113, 75, 103, 0.2) !important;
+}
+
+.for-login .btn-login {
+    background: linear-gradient(to right, var(--sundae-purple), #875A7B) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    color: white !important;
+    font-weight: 600 !important;
+    padding: 12px !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 1.5rem !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.for-login .btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(113, 75, 103, 0.3) !important;
+}
+
+.for-login .btn-login:active {
+    transform: translateY(0);
+}
+
+.for-login .page-card-head img {
+    max-height: 80px !important;
+    margin-bottom: 1.5rem !important;
+}
+
+.for-login a.forgot-password {
+    color: var(--sundae-purple) !important;
+    font-weight: 500;
+}
+
+/* RTL Support */
+[dir="rtl"] .for-login .login-content {
+    text-align: right;
+}

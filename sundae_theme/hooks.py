@@ -20,7 +20,7 @@ app_include_css = "sundae_theme.bundle.css"
 app_include_js = ["sundae_theme.bundle.js"]
 
 # include js, css files in header of web template
-# web_include_css = "/assets/sundae_theme/css/sundae_theme.css"
+web_include_css = "login.bundle.css"
 # web_include_js = "/assets/sundae_theme/js/sundae_theme.js"
 
 # include custom scss in every website theme (without file extension ".scss")
