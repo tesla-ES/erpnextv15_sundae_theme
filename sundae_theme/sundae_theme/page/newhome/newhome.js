@@ -28,19 +28,24 @@ function render_grid(page, workspaces) {
     workspaces.forEach(ws => {
         if (ws.is_hidden) return;
 
+        // Use frappe.utils.icon if available for high-quality SVGs
+        const icon_html = ws.icon ? frappe.utils.icon(ws.icon, 'lg') : '<i class="octicon octicon-package"></i>';
+
         const card = $(`
 			<div class="ws-card" data-name="${ws.name}">
 				<div class="ws-icon-wrapper">
-					<i class="${ws.icon || 'octicon octicon-package'}"></i>
+					${icon_html}
 				</div>
 				<div class="ws-title">${ws.label || ws.name}</div>
 			</div>
 		`);
 
         card.click(() => {
-            frappe.set_route(ws.name);
+            // Fix: Frappe v15 workspaces typically use lowercase routes
+            frappe.set_route(ws.name.toLowerCase());
         });
 
         grid.append(card);
     });
 }
+

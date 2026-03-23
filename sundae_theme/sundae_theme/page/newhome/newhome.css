@@ -15,6 +15,7 @@
     font-weight: 800;
     background: linear-gradient(135deg, #714B67, #ffa00a);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 10px;
 }
@@ -63,16 +64,26 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     font-size: 1.8rem;
     color: #714B67;
     transition: all 0.3s ease;
 }
 
+.ws-icon-wrapper svg {
+    width: 32px !important;
+    height: 32px !important;
+    fill: currentColor !important;
+}
+
 .ws-card:hover .ws-icon-wrapper {
-    background: linear-gradient(135deg, #714B67, #875A7B);
-    color: white;
+    background: linear-gradient(135deg, #714B67, #875A7B) !important;
+    color: white !important;
     transform: scale(1.1);
+}
+
+.ws-card:hover .ws-icon-wrapper svg {
+    fill: white !important;
 }
 
 .ws-title {
