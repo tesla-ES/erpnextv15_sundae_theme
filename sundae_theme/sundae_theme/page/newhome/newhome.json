@@ -1,0 +1,23 @@
+{
+    "content": "<h1>New Home</h1>",
+    "creation": "2026-03-24 00:45:00.000000",
+    "docstatus": 0,
+    "doctype": "Page",
+    "idx": 0,
+    "modified": "2026-03-24 00:45:00.000000",
+    "modified_by": "Administrator",
+    "module": "Sundae Theme",
+    "name": "newhome",
+    "owner": "Administrator",
+    "page_name": "newhome",
+    "roles": [
+        {
+            "role": "System Manager"
+        },
+        {
+            "role": "All"
+        }
+    ],
+    "standard": "Yes",
+    "title": "New Home"
+}

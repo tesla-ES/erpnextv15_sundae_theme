@@ -1,0 +1,106 @@
+.newhome-container {
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+}
+
+.newhome-header {
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.greeting-text {
+    font-size: 3rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #714B67, #ffa00a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+}
+
+.sub-greeting {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.workspace-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 30px;
+    padding: 20px;
+}
+
+.ws-card {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ws-card:hover {
+    transform: translateY(-10px);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    border-color: #ffa00a;
+}
+
+.ws-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #f0eff4, #ffffff);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+    color: #714B67;
+    transition: all 0.3s ease;
+}
+
+.ws-card:hover .ws-icon-wrapper {
+    background: linear-gradient(135deg, #714B67, #875A7B);
+    color: white;
+    transform: scale(1.1);
+}
+
+.ws-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.ws-card:hover .ws-title {
+    color: #000;
+}
+
+/* Loading State */
+.loading-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 100px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .greeting-text {
+        font-size: 2rem;
+    }
+
+    .workspace-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 15px;
+    }
+}
