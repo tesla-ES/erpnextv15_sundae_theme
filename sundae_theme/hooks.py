@@ -69,7 +69,7 @@ web_include_css = "login.bundle.css"
 # ------------
 
 # before_install = "sundae_theme.install.before_install"
-# after_install = "sundae_theme.install.after_install"
+after_install = "sundae_theme.setup_theme.after_install"
 
 # Uninstallation
 # ------------
@@ -184,6 +184,8 @@ override_whitelisted_methods = {
 # ----------------
 # before_request = ["sundae_theme.utils.before_request"]
 # after_request = ["sundae_theme.utils.after_request"]
+
+after_migrate = "sundae_theme.setup_theme.after_migrate"
 
 # Job Events
 # ----------
