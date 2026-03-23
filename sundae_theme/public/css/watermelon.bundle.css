@@ -68,8 +68,7 @@ h6.uppercase {
 
 
 [data-theme=watermelon] .navbar {
-    background: linear-gradient(to right, var(--main-color), var(--second-color)) !important;
-    border: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 [data-theme=watermelon] .navbar-nav>li>a {
@@ -113,6 +112,7 @@ h6.uppercase {
 
 [data-theme=watermelon] .layout-side-section {
     font-size: 14px;
+    background: var(--sun-glass-bg) !important;
 }
 
 [data-theme=watermelon] .uppercase {

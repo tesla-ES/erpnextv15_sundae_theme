@@ -15,4 +15,17 @@ $(document).ready(function () {
             frappe.set_route('newhome');
         }
     }
+    // Redirect Home Logo to /app/newhome
+    const observer = new MutationObserver(() => {
+        const brand = document.querySelector('.navbar-brand, .app-logo');
+        if (brand && brand.getAttribute('href') !== '/app/newhome') {
+            brand.setAttribute('href', '/app/newhome');
+            brand.onclick = (e) => {
+                e.preventDefault();
+                frappe.set_route('newhome');
+            };
+        }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
 });
