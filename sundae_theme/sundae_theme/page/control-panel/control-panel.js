@@ -5,7 +5,7 @@ frappe.pages['control-panel'].on_page_load = function (wrapper) {
         single_column: true
     });
 
-    $(frappe.render_template("control_panel", {})).appendTo(page.body);
+    $(frappe.render_template("control-panel", {})).appendTo(page.body);
 
     const cp = new ControlPanel(page);
 }
