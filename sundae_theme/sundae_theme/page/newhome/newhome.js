@@ -35,7 +35,7 @@ function render_grid(page, workspaces) {
 				<div class="ws-title">Control Panel</div>
 			</div>
 		`);
-        cp_card.click(() => frappe.set_route('control-panel'));
+        cp_card.click(() => frappe.set_route('control_panel'));
         grid.append(cp_card);
     }
 
