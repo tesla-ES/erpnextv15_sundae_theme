@@ -1,0 +1,146 @@
+<div class="control-panel-wrapper">
+    <div class="cp-header">
+        <h2 class="cp-title">Bench Control Center</h2>
+        <p class="cp-subtitle">Manage your environment services safely from the desk.</p>
+    </div>
+
+    <div class="cp-grid">
+        <!-- Status Card -->
+        <div class="cp-card status-card">
+            <div class="card-icon"><i class="fa fa-server"></i></div>
+            <div class="card-content">
+                <h3>System Status</h3>
+                <div id="system-info" class="info-list">
+                    <p>Loading status...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Commands Selection -->
+        <div class="cp-card actions-card">
+            <div class="card-icon"><i class="fa fa-terminal"></i></div>
+            <div class="card-content">
+                <h3>Quick Actions</h3>
+                <div class="action-buttons">
+                    <button class="btn btn-primary btn-block command-btn" data-cmd="clear-cache">
+                        <i class="fa fa-refresh"></i> Clear Cache
+                    </button>
+                    <button class="btn btn-default btn-block command-btn" data-cmd="migrate">
+                        <i class="fa fa-database"></i> Run Migration
+                    </button>
+                    <button class="btn btn-default btn-block command-btn" data-cmd="build">
+                        <i class="fa fa-paint-brush"></i> Rebuild Sundae Theme
+                    </button>
+                    <button class="btn btn-danger btn-block command-btn" data-cmd="restart">
+                        <i class="fa fa-power-off"></i> Restart Services
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terminal Output -->
+        <div class="cp-card output-card">
+            <div class="card-head">
+                <h3>Console Output</h3>
+                <button id="clear-console" class="btn btn-xs btn-link">Clear</button>
+            </div>
+            <div id="console-output" class="console">
+                <p class="text-muted">Waiting for action...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .control-panel-wrapper {
+        padding: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .cp-header {
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .cp-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, var(--primary), var(--second-color));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .cp-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+
+    .cp-card {
+        background: var(--sun-glass-bg);
+        backdrop-filter: var(--sun-glass-blur);
+        -webkit-backdrop-filter: var(--sun-glass-blur);
+        border-radius: var(--sun-radius-lg);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 25px;
+        box-shadow: var(--sun-shadow-soft);
+        display: flex;
+        gap: 20px;
+    }
+
+    .output-card {
+        grid-column: 1 / -1;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .card-icon {
+        font-size: 2rem;
+        color: var(--primary);
+        background: rgba(var(--primary-color-rgb), 0.1);
+        width: 60px;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: var(--sun-radius-md);
+    }
+
+    .card-content h3 {
+        margin-top: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 15px;
+    }
+
+    .console {
+        background: #1e1e1e;
+        color: #00ff00;
+        font-family: 'Courier New', Courier, monospace;
+        padding: 15px;
+        border-radius: 8px;
+        height: 250px;
+        overflow-y: auto;
+        font-size: 0.9rem;
+        white-space: pre-wrap;
+    }
+
+    .card-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    [data-theme="dark"] .cp-card {
+        background: rgba(30, 30, 30, 0.6);
+    }
+</style>

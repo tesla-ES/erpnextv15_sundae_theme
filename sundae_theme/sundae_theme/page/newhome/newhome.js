@@ -25,6 +25,20 @@ function render_grid(page, workspaces) {
     const grid = page.body.find('#workspace-grid');
     grid.empty();
 
+    // Add Control Panel Card for System Managers
+    if (frappe.user_roles.includes('System Manager')) {
+        const cp_card = $(`
+			<div class="ws-card system-card" data-name="control-panel">
+				<div class="ws-icon-wrapper">
+					<i class="fa fa-terminal"></i>
+				</div>
+				<div class="ws-title">Control Panel</div>
+			</div>
+		`);
+        cp_card.click(() => frappe.set_route('control-panel'));
+        grid.append(cp_card);
+    }
+
     workspaces.forEach(ws => {
         if (ws.is_hidden) return;
 
