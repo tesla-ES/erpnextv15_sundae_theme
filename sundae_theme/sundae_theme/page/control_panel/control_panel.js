@@ -23,31 +23,43 @@ class ControlPanel {
 
     init() {
         this.container.find('#api-url').val(this.apiUrl);
-        this.container.find('#api-token').val(this.apiToken);
+        this.update_auth_ui();
 
-        if (this.apiUrl) {
+        if (this.apiUrl && this.apiToken) {
             this.start_stats_poll();
         }
         this.bind_events();
     }
 
-    bind_events() {
-        var me = this;
+    update_auth_ui() {
+        if (this.apiToken) {
+            this.container.find('#login-form').hide();
+            this.container.find('#auth-status').show();
+        } else {
+            this.container.find('#login-form').show();
+            this.container.find('#auth-status').hide();
+        }
+    }
 
-        // Save API Config
-        this.container.find('#btn-save-api').click(() => {
-            this.apiUrl = this.container.find('#api-url').val().replace(/\/$/, "");
-            this.apiToken = this.container.find('#api-token').val();
-            localStorage.setItem('sun_cp_api_url', this.apiUrl);
-            localStorage.setItem('sun_cp_api_token', this.apiToken);
-            frappe.show_alert({ message: __('Settings Saved'), indicator: 'green' });
-            this.start_stats_poll();
+    bind_events() {
+        // Login Action
+        this.container.find('#btn-login-api').click(() => {
+            this.login();
+        });
+
+        // Logout
+        this.container.find('#btn-logout').click(() => {
+            this.apiToken = '';
+            localStorage.removeItem('sun_cp_api_token');
+            this.update_auth_ui();
+            clearInterval(this.poll_timer);
+            this.log("Logged out from API.");
         });
 
         // Command Buttons
-        this.container.on('click', '.command-btn', function () {
-            let cmd = $(this).data('cmd');
-            me.run_fastapi_cmd(cmd);
+        this.container.on('click', '.command-btn', (e) => {
+            let cmd = $(e.currentTarget).data('cmd');
+            this.run_fastapi_cmd(cmd);
         });
 
         // Install App
@@ -62,6 +74,41 @@ class ControlPanel {
         });
     }
 
+    async login() {
+        this.apiUrl = this.container.find('#api-url').val().replace(/\/$/, "");
+        const username = this.container.find('#api-user').val();
+        const password = this.container.find('#api-pass').val();
+
+        if (!this.apiUrl || !username || !password) {
+            return frappe.msgprint(__('Please enter API URL, Username, and Password'));
+        }
+
+        this.log(`> Attempting login to ${this.apiUrl}...`);
+
+        try {
+            const response = await fetch(`${this.apiUrl}/api/v1/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            const data = await response.json();
+            if (data.token) {
+                this.apiToken = data.token;
+                localStorage.setItem('sun_cp_api_url', this.apiUrl);
+                localStorage.setItem('sun_cp_api_token', this.apiToken);
+                this.update_auth_ui();
+                this.start_stats_poll();
+                frappe.show_alert({ message: __('Connected Successfully'), indicator: 'green' });
+                this.log("Login successful. Monitoring started.");
+            } else {
+                this.log(`Login Failed: ${data.detail || 'Invalid Credentials'}`, 'text-danger');
+            }
+        } catch (e) {
+            this.log(`Login Error: ${e.message}`, 'text-danger');
+        }
+    }
+
     start_stats_poll() {
         if (this.poll_timer) clearInterval(this.poll_timer);
         this.fetch_stats();
@@ -69,12 +116,17 @@ class ControlPanel {
     }
 
     async fetch_stats() {
-        if (!this.apiUrl) return;
+        if (!this.apiUrl || !this.apiToken) return;
 
         try {
             const response = await fetch(`${this.apiUrl}/api/v1/system/status`, {
                 headers: { 'Authorization': `Bearer ${this.apiToken}` }
             });
+            if (response.status === 401) {
+                this.log("Session expired. Please login again.", "text-warning");
+                this.container.find('#btn-logout').click();
+                return;
+            }
             const data = await response.json();
             this.update_gauges(data);
             this.update_info(data);
@@ -84,7 +136,6 @@ class ControlPanel {
     }
 
     update_gauges(data) {
-        // Assume data structure: { cpu: 25.5, ram: 60.1, disk: 40.0 }
         const stats = {
             cpu: data.cpu_usage || data.cpu || 0,
             ram: data.ram_usage || data.ram || 0,
@@ -95,13 +146,8 @@ class ControlPanel {
             let val = Math.round(stats[key]);
             this.container.find(`#${key}-val`).text(`${val}%`);
             this.container.find(`#${key}-gauge .gauge-fill`).css('height', `${val}%`);
-
-            // Interaction: Pulse on high usage
-            if (val > 85) {
-                this.container.find(`#${key}-gauge`).addClass('pulse-red');
-            } else {
-                this.container.find(`#${key}-gauge`).removeClass('pulse-red');
-            }
+            if (val > 85) this.container.find(`#${key}-gauge`).addClass('pulse-red');
+            else this.container.find(`#${key}-gauge`).removeClass('pulse-red');
         });
     }
 
@@ -116,7 +162,7 @@ class ControlPanel {
     }
 
     async run_fastapi_cmd(action, payload = {}) {
-        if (!this.apiUrl) return frappe.msgprint(__('Setup API URL first'));
+        if (!this.apiUrl || !this.apiToken) return frappe.msgprint(__('Login first'));
 
         let endpoint = `/api/v1/bench/${action}`;
         if (action === 'install') endpoint = `/api/v1/apps/install`;
@@ -124,8 +170,8 @@ class ControlPanel {
         if (action === 'backup') endpoint = `/api/v1/backup/create`;
         if (action === 'logs') endpoint = `/api/v1/logs`;
 
-        this.log(`> Requesting: ${endpoint}...`);
-        this.page.set_indicator('Requesting...', 'orange');
+        this.log(`> Executing: ${action}...`);
+        this.page.set_indicator('Running...', 'orange');
 
         try {
             const method = (action === 'logs') ? 'GET' : 'POST';
@@ -143,12 +189,12 @@ class ControlPanel {
             const data = await response.json();
             this.page.clear_indicator();
 
-            if (data.message) {
-                this.log(data.message);
-                frappe.show_alert({ message: data.message, indicator: 'green' });
+            if (data.status === 'success' || data.message) {
+                this.log(data.message || 'Action completed');
+                frappe.show_alert({ message: data.message || 'Success', indicator: 'green' });
             }
             if (data.output) this.log(data.output);
-            if (data.error) this.log(`ERROR: ${data.error}`, 'text-danger');
+            if (data.detail) this.log(`API Message: ${data.detail}`);
 
         } catch (e) {
             this.page.clear_indicator();

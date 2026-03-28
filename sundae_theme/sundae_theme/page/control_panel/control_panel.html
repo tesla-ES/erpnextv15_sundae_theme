@@ -44,11 +44,14 @@
                 <div class="api-setup mb-3">
                     <input type="text" id="api-url" class="form-control mb-2"
                         placeholder="FastAPI URL (e.g. http://localhost:8000)">
-                    <div class="input-group">
-                        <input type="password" id="api-token" class="form-control" placeholder="Bearer Token">
-                        <span class="input-group-btn">
-                            <button class="btn btn-default" id="btn-save-api">Save</button>
-                        </span>
+                    <div class="login-inputs" id="login-form">
+                        <input type="text" id="api-user" class="form-control mb-2" placeholder="Username">
+                        <input type="password" id="api-pass" class="form-control mb-2" placeholder="Password">
+                        <button class="btn btn-primary btn-block" id="btn-login-api">Login & Connect</button>
+                    </div>
+                    <div id="auth-status" class="mt-2 text-center" style="display:none">
+                        <span class="label label-success">Authenticated</span>
+                        <button class="btn btn-xs btn-link" id="btn-logout">Logout</button>
                     </div>
                 </div>
                 <div id="system-info" class="info-list">
@@ -285,6 +288,6 @@
     }
 
     [data-theme="dark"] .cp-card {
-        background: rgba(25: //30, 30, 30, 0.6);
-        }
+        background: rgba(30, 30, 30, 0.6);
+    }
 </style>
