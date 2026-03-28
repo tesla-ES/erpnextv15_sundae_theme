@@ -1,11 +1,15 @@
-// Final Robustness: Hook into any variation of the name to ensure it loads
-['control_panel', 'control-panel'].forEach(page_id => {
+// Version 2.3.3: Extreme Robustness for Page Loading
+['control_panel', 'control-panel', 'control'].forEach(page_id => {
     if (frappe.pages[page_id]) {
-        frappe.pages[page_id].on_page_load = function (wrapper) {
-            console.log("Sundae Control Panel: Executing on_page_load for " + page_id);
+        console.log("Sundae Control Panel: Found Page Record -> " + page_id);
 
-            // Avoid double rendering if both hooks trigger
-            if ($(wrapper).find('.control-panel-wrapper').length) return;
+        frappe.pages[page_id].on_page_load = function (wrapper) {
+            console.log("Sundae Control Panel: on_page_load triggered for " + page_id);
+
+            if ($(wrapper).find('.control-panel-wrapper').length) {
+                console.log("Sundae Control Panel: Already rendered, skipping.");
+                return;
+            }
 
             var page = frappe.ui.make_app_page({
                 parent: wrapper,
@@ -13,19 +17,32 @@
                 single_column: true
             });
 
-            // Ensure the container is visible and has a minimum height
-            $(wrapper).css('min-height', '800px');
+            // Ensure the container is visible 
+            $(wrapper).css({ 'min-height': '800px', 'display': 'block', 'opacity': '1' });
+            console.log("Sundae Control Panel: App Page created. Attempting template render...");
 
             try {
-                // Determine template name (Frappe usually uses the one found in the folder)
-                $(frappe.render_template("control_panel", {})).appendTo(page.body);
-                console.log("Sundae Control Panel: Template rendered successfully.");
+                // Determine template name
+                let template_html = frappe.render_template("control_panel", {});
+                if (template_html) {
+                    $(template_html).appendTo(page.body);
+                    console.log("Sundae Control Panel: Template rendered successfully.");
+                } else {
+                    console.warn("Sundae Control Panel: Template returned empty string.");
+                    page.body.append('<div class="alert alert-warning">Warning: Template "control_panel" returned no content.</div>');
+                }
             } catch (e) {
                 console.error("Sundae Control Panel: Template render FAILED", e);
-                page.body.append('<div class="alert alert-danger" style="margin:20px">Error: Template "control_panel" could not be found. Please check if you ran bench build.</div>');
+                page.body.append('<div class="alert alert-danger">Error: Template render failed. Check console for details.</div>');
             }
 
-            const cp = new ControlPanel(page);
+            // Always initialize class even if template is missing (to catch errors in constructor)
+            try {
+                const cp = new ControlPanel(page);
+                console.log("Sundae Control Panel: Controller initialized.");
+            } catch (e) {
+                console.error("Sundae Control Panel: Controller Initialization failed", e);
+            }
         }
     }
 });
