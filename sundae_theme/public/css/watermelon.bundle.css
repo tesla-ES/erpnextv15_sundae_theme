@@ -7,8 +7,18 @@
     --dt-primary-color: var(--main-color);
     --blue-avatar-bg: var(--main-color);
     --blue-avatar-color: var(--main-color);
-    --blue: var(--main-color)
+    --blue: var(--main-color);
 }
+
+[data-theme=watermelon] body {
+    background-color: #f3f6f9 !important;
+}
+
+[data-theme=watermelon] .page-container,
+[data-theme=watermelon] .layout-main-section {
+    background-color: var(--widget-bg) !important;
+}
+
 
 [data-theme=watermelon] .page-container,
 [data-theme=watermelon] .layout-main-section {
