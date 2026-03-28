@@ -1,4 +1,4 @@
-frappe.pages['control-panel'].on_page_load = function (wrapper) {
+frappe.pages['control_panel'].on_page_load = function (wrapper) {
     console.log("Sundae Control Panel: on_page_load triggered");
     var page = frappe.ui.make_app_page({
         parent: wrapper,
@@ -6,9 +6,10 @@ frappe.pages['control-panel'].on_page_load = function (wrapper) {
         single_column: true
     });
 
+    // Debug: This will show if the JS is loaded even if template fails
     page.body.append('<div id="debug-marker" style="padding: 20px; background: #eee; color: #000; border: 1px solid #ccc; margin: 10px;">JS LOADED: Attempting to render template...</div>');
 
-    $(frappe.render_template("control-panel", {})).appendTo(page.body);
+    $(frappe.render_template("control_panel", {})).appendTo(page.body);
 
     const cp = new ControlPanel(page);
 }
