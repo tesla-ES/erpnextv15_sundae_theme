@@ -1,18 +1,37 @@
-frappe.pages['control_panel'].on_page_load = function (wrapper) {
-    console.log("Sundae Control Panel: on_page_load triggered");
-    var page = frappe.ui.make_app_page({
-        parent: wrapper,
-        title: 'Bench Control Console',
-        single_column: true
-    });
+// Robust Page Hook: handles both 'control_panel' and 'control-panel'
+(function () {
+    const page_name = frappe.pages['control_panel'] ? 'control_panel' : 'control-panel';
+    console.log("Sundae Control Panel: Attaching to " + page_name);
 
-    // Debug: This will show if the JS is loaded even if template fails
-    page.body.append('<div id="debug-marker" style="padding: 20px; background: #eee; color: #000; border: 1px solid #ccc; margin: 10px;">JS LOADED: Attempting to render template...</div>');
+    if (!frappe.pages[page_name]) {
+        console.error("Sundae Control Panel: Page record not found in frappe.pages!");
+        return;
+    }
 
-    $(frappe.render_template("control_panel", {})).appendTo(page.body);
+    frappe.pages[page_name].on_page_load = function (wrapper) {
+        console.log("Sundae Control Panel: on_page_load triggered for " + page_name);
+        var page = frappe.ui.make_app_page({
+            parent: wrapper,
+            title: 'Bench Control Console',
+            single_column: true
+        });
 
-    const cp = new ControlPanel(page);
-}
+        // Debug: Visible marker
+        page.body.append('<div id="debug-marker" style="padding: 15px; background: #fff3cd; color: #856404; border: 1px solid #ffeeba; margin-bottom: 20px; border-radius: 8px;"><b>System Note:</b> Use the Login form below to connect to your management backend.</div>');
+
+        // Try to render template (using both names if needed)
+        try {
+            let template_name = "control_panel";
+            // Check if template exists under underscore or dash
+            $(frappe.render_template(template_name, {})).appendTo(page.body);
+        } catch (e) {
+            console.error("Template render failed:", e);
+            page.body.append('<div class="alert alert-danger">Critical Error: Template "control_panel" could not be loaded.</div>');
+        }
+
+        const cp = new ControlPanel(page);
+    }
+})();
 
 class ControlPanel {
     constructor(page) {
@@ -46,12 +65,10 @@ class ControlPanel {
     }
 
     bind_events() {
-        // Login Action
         this.container.find('#btn-login-api').click(() => {
             this.login();
         });
 
-        // Logout
         this.container.find('#btn-logout').click(() => {
             this.apiToken = '';
             localStorage.removeItem('sun_cp_api_token');
@@ -60,13 +77,11 @@ class ControlPanel {
             this.log("Logged out from API.");
         });
 
-        // Command Buttons
         this.container.on('click', '.command-btn', (e) => {
             let cmd = $(e.currentTarget).data('cmd');
             this.run_fastapi_cmd(cmd);
         });
 
-        // Install App
         this.container.find('#btn-install').click(() => {
             let repo = this.container.find('#install-repo').val();
             if (!repo) return frappe.msgprint(__('Enter Repo URL'));
