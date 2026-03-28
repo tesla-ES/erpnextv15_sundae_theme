@@ -1,17 +1,58 @@
 <div class="control-panel-wrapper">
     <div class="cp-header">
-        <h2 class="cp-title">Bench Control Center</h2>
-        <p class="cp-subtitle">Manage your environment services safely from the desk.</p>
+        <h2 class="cp-title">Bench Control Console</h2>
+        <p class="cp-subtitle">Manage your environment services safely with real-time resource monitor.</p>
     </div>
 
     <div class="cp-grid">
-        <!-- Status Card -->
-        <div class="cp-card status-card">
-            <div class="card-icon"><i class="fa fa-server"></i></div>
+        <!-- Resource Gauges -->
+        <div class="cp-card gauges-card">
+            <div class="gauge-container">
+                <div class="gauge-glass" id="cpu-gauge">
+                    <div class="gauge-fill"></div>
+                    <div class="gauge-info">
+                        <span class="gauge-label">CPU</span>
+                        <span class="gauge-value" id="cpu-val">0%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="gauge-container">
+                <div class="gauge-glass" id="ram-gauge">
+                    <div class="gauge-fill"></div>
+                    <div class="gauge-info">
+                        <span class="gauge-label">RAM</span>
+                        <span class="gauge-value" id="ram-val">0%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="gauge-container">
+                <div class="gauge-glass" id="disk-gauge">
+                    <div class="gauge-fill"></div>
+                    <div class="gauge-info">
+                        <span class="gauge-label">DISK</span>
+                        <span class="gauge-value" id="disk-val">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status & Login Card -->
+        <div class="cp-card info-card">
+            <div class="card-icon"><i class="fa fa-shield"></i></div>
             <div class="card-content">
-                <h3>System Status</h3>
+                <h3>Authentication & Status</h3>
+                <div class="api-setup mb-3">
+                    <input type="text" id="api-url" class="form-control mb-2"
+                        placeholder="FastAPI URL (e.g. http://localhost:8000)">
+                    <div class="input-group">
+                        <input type="password" id="api-token" class="form-control" placeholder="Bearer Token">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" id="btn-save-api">Save</button>
+                        </span>
+                    </div>
+                </div>
                 <div id="system-info" class="info-list">
-                    <p>Loading status...</p>
+                    <p class="text-muted">Enter API details to connect...</p>
                 </div>
             </div>
         </div>
@@ -19,21 +60,36 @@
         <!-- Commands Selection -->
         <div class="cp-card actions-card">
             <div class="card-icon"><i class="fa fa-terminal"></i></div>
-            <div class="card-content">
-                <h3>Quick Actions</h3>
-                <div class="action-buttons">
-                    <button class="btn btn-primary btn-block command-btn" data-cmd="clear-cache">
-                        <i class="fa fa-refresh"></i> Clear Cache
+            <div class="card-content" style="flex:1">
+                <h3>Bench Control</h3>
+                <div class="action-grid">
+                    <button class="btn btn-primary command-btn" data-cmd="start">
+                        <i class="fa fa-play"></i> Start
                     </button>
-                    <button class="btn btn-default btn-block command-btn" data-cmd="migrate">
-                        <i class="fa fa-database"></i> Run Migration
+                    <button class="btn btn-danger command-btn" data-cmd="stop">
+                        <i class="fa fa-stop"></i> Stop
                     </button>
-                    <button class="btn btn-default btn-block command-btn" data-cmd="build">
-                        <i class="fa fa-paint-brush"></i> Rebuild Sundae Theme
+                    <button class="btn btn-warning command-btn" data-cmd="restart">
+                        <i class="fa fa-refresh"></i> Restart
                     </button>
-                    <button class="btn btn-danger btn-block command-btn" data-cmd="restart">
-                        <i class="fa fa-power-off"></i> Restart Services
+                    <button class="btn btn-info command-btn" data-cmd="update">
+                        <i class="fa fa-cloud-download"></i> Update
                     </button>
+                    <button class="btn btn-success command-btn" data-cmd="backup">
+                        <i class="fa fa-archive"></i> Backup
+                    </button>
+                    <button class="btn btn-default command-btn" data-cmd="logs">
+                        <i class="fa fa-file-text-o"></i> Logs
+                    </button>
+                </div>
+                <div class="install-app-section mt-4">
+                    <h5>Install App</h5>
+                    <div class="input-group">
+                        <input type="text" id="install-repo" class="form-control" placeholder="Repo URL">
+                        <span class="input-group-btn">
+                            <button class="btn btn-primary" id="btn-install">Install</button>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -59,14 +115,14 @@
     }
 
     .cp-header {
-        margin-bottom: 40px;
+        margin-bottom: 30px;
         text-align: center;
     }
 
     .cp-title {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
         font-weight: 800;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
         background: linear-gradient(135deg, var(--primary), var(--second-color));
         -webkit-background-clip: text;
         background-clip: text;
@@ -76,7 +132,81 @@
     .cp-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 30px;
+        gap: 20px;
+    }
+
+    .gauges-card {
+        grid-column: 1 / -1;
+        justify-content: space-around;
+        padding: 40px !important;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05)) !important;
+    }
+
+    .gauge-container {
+        position: relative;
+        width: 140px;
+        height: 140px;
+    }
+
+    .gauge-glass {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15),
+            inset 0 0 15px rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.5s ease;
+    }
+
+    .gauge-fill {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        background: linear-gradient(0deg, var(--primary), #ffa00a);
+        height: 0%;
+        transition: height 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        opacity: 0.5;
+    }
+
+    .gauge-info {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+    }
+
+    .gauge-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        opacity: 0.8;
+    }
+
+    .gauge-value {
+        display: block;
+        font-size: 1.6rem;
+        font-weight: 900;
+    }
+
+    .action-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+    }
+
+    .action-grid .btn {
+        padding: 12px 5px !important;
+        height: auto !important;
+        border-radius: var(--sun-radius-md) !important;
+        font-size: 0.9rem;
     }
 
     .cp-card {
@@ -89,6 +219,12 @@
         box-shadow: var(--sun-shadow-soft);
         display: flex;
         gap: 20px;
+        transition: var(--sun-transition);
+    }
+
+    .cp-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--sun-shadow-deep);
     }
 
     .output-card {
@@ -98,11 +234,11 @@
     }
 
     .card-icon {
-        font-size: 2rem;
+        font-size: 1.8rem;
         color: var(--primary);
         background: rgba(var(--primary-color-rgb), 0.1);
-        width: 60px;
-        height: 60px;
+        width: 55px;
+        height: 55px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -111,36 +247,44 @@
 
     .card-content h3 {
         margin-top: 0;
-        font-size: 1.25rem;
+        font-size: 1.2rem;
         font-weight: 700;
     }
 
-    .action-buttons {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-top: 15px;
-    }
-
     .console {
-        background: #1e1e1e;
-        color: #00ff00;
-        font-family: 'Courier New', Courier, monospace;
+        background: #0d0d0d;
+        color: #00ff41;
+        font-family: 'Fira Code', 'Courier New', monospace;
         padding: 15px;
-        border-radius: 8px;
+        border-radius: 12px;
         height: 250px;
         overflow-y: auto;
-        font-size: 0.9rem;
+        font-size: 0.85rem;
         white-space: pre-wrap;
+        border: 1px solid rgba(255, 255, 255, 0.05);
     }
 
-    .card-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .pulse-red {
+        border-color: rgba(255, 0, 0, 0.4) !important;
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.2) !important;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.02);
+        }
+
+        100% {
+            transform: scale(1);
+        }
     }
 
     [data-theme="dark"] .cp-card {
-        background: rgba(30, 30, 30, 0.6);
-    }
+        background: rgba(25: //30, 30, 30, 0.6);
+        }
 </style>
