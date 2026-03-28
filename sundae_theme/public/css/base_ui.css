@@ -1,0 +1,25 @@
+/* Sundae Theme: Global Resets for Theme Resolution */
+html[data-theme] {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Ensure the background changes even if the theme CSS hasn't fully loaded */
+[data-theme=cotton_candy] body {
+    background-color: #0B1E30 !important;
+}
+
+[data-theme=watermelon] body {
+    background-color: #f3f6f9 !important;
+}
+
+[data-theme=cherry] body {
+    background-color: #881337 !important;
+}
+
+[data-theme=apricot] body {
+    background-color: #36414c !important;
+}
+
+[data-theme=odoo] body {
+    background-color: #f0f0f0 !important;
+}
