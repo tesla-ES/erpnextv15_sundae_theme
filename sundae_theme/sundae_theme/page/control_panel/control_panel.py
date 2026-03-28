@@ -1,3 +1,5 @@
+# Sundae Theme - Control Panel v2.3.4
+# This file handles server-side execution of bench commands.
 import frappe
 import subprocess
 from frappe import _
@@ -49,5 +51,5 @@ def get_status():
     return {
         "site": frappe.local.site,
         "version": frappe.get_attr("frappe.__version__"),
-        "app_version": frappe.get_attr("sundae_theme.__version__")
+        "app_version": "0.0.1 (Sundae CP v2.3.4)"
     }
