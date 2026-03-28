@@ -1,6 +1,124 @@
-@import "./base_ui.css";
-@import "./cotton_candy.bundle.css";
+/* 
+   Sundae Theme v2.5 - Merged Bundle
+   Base UI + Theme Bundles
+*/
 
+:root {
+    --sun-radius-sm: 6px;
+    --sun-radius-md: 10px;
+    --sun-radius-lg: 14px;
+    --sun-radius-xl: 20px;
+
+    --sun-shadow-soft: 0 4px 12px rgba(0, 0, 0, 0.05);
+    --sun-shadow-deep: 0 8px 24px rgba(0, 0, 0, 0.12);
+
+    --sun-glass-bg: rgba(255, 255, 255, 0.75);
+    --sun-glass-blur: blur(15px);
+    --sun-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Global Transitions */
+* {
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/* 1. Buttons */
+.btn {
+    border-radius: var(--sun-radius-md) !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    font-weight: 500 !important;
+    border: 1px solid transparent !important;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--sun-shadow-soft);
+}
+
+.btn-primary {
+    box-shadow: 0 4px 10px rgba(var(--primary-color-rgb), 0.3);
+}
+
+/* 2. Inputs */
+.form-control {
+    border-radius: var(--sun-radius-sm) !important;
+    background-color: var(--control-bg) !important;
+    border: 1px solid var(--border-color) !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.form-control:focus {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.15) !important;
+}
+
+/* 3. Cards & Sections */
+.layout-side-section,
+.layout-main-section,
+.page-card,
+.form-section {
+    border-radius: var(--sun-radius-lg) !important;
+    border: 1px solid var(--border-color) !important;
+    background-color: var(--card-bg) !important;
+    overflow: hidden;
+}
+
+/* 4. Navbar (Header) Glassmorphism */
+.navbar {
+    background: var(--sun-glass-bg) !important;
+    backdrop-filter: var(--sun-glass-blur) !important;
+    -webkit-backdrop-filter: var(--sun-glass-blur) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: var(--sun-shadow-soft) !important;
+}
+
+/* 5. Floating Sidebar Effect */
+.layout-side-section {
+    margin: 15px 0 15px 15px !important;
+    height: calc(100vh - 100px) !important;
+    position: sticky !important;
+    top: 80px !important;
+    background: var(--sun-glass-bg) !important;
+    backdrop-filter: var(--sun-glass-blur) !important;
+    -webkit-backdrop-filter: var(--sun-glass-blur) !important;
+    box-shadow: var(--sun-shadow-soft) !important;
+    border-radius: var(--sun-radius-lg) !important;
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+    transition: var(--sun-transition) !important;
+    z-index: 100;
+}
+
+.sidebar-item-container {
+    border-radius: var(--sun-radius-md) !important;
+    margin: 4px 12px !important;
+    transition: var(--sun-transition) !important;
+}
+
+.sidebar-item-container:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.05) !important;
+    transform: translateX(4px);
+}
+
+.sidebar-item-container.active {
+    background-color: var(--primary) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(var(--primary-color-rgb), 0.3) !important;
+}
+
+.sidebar-item-container.active .sidebar-item-label {
+    color: white !important;
+}
+
+[data-theme="dark"] {
+    --sun-glass-bg: rgba(30, 30, 30, 0.65);
+}
+
+[data-theme="dark"] .layout-side-section {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Theme Bundles - These are .bundle.css files and will be copied by Frappe Build */
+@import "./cotton_candy.bundle.css";
 @import "./cherry.bundle.css";
 @import "./apricot.bundle.css";
 @import "./watermelon.bundle.css";
