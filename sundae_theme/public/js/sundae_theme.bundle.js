@@ -1,56 +1,73 @@
-// Sundae Theme: Bundle [v2.5.0 - Logic & Robustness Fix]
+// Sundae Theme: Bundle [v2.6.0 - Robust Runtime Fix]
 import "./theme_switcher";
 
-$(document).ready(function () {
-    console.log("Sundae: Bundle initialized");
+(function() {
+    console.log("Sundae: Script execution started");
 
-    // 1. Theme Applier (Slugified)
+    const get_current_theme = () => {
+        return (frappe.boot && frappe.boot.user && frappe.boot.user.desk_theme) || 
+               (frappe.boot && frappe.boot.desk_theme) || 
+               'Light';
+    };
+
     const apply_theme = () => {
-        // Fallback-safe retrieval for desk_theme in v15
-        let theme = (frappe.boot.user && frappe.boot.user.desk_theme) || 
-                      frappe.boot.desk_theme || 
-                      'Light'; // Default
-        
+        let theme = get_current_theme();
         let theme_id = theme.toLowerCase().trim().replace(/ /g, "_");
 
-        // Canonical mapping for standard themes
+        // Map standard names
         if (theme_id.includes("light")) theme_id = "light";
         if (theme_id.includes("dark") || theme_id.includes("night")) theme_id = "dark";
         if (theme_id.includes("automatic")) theme_id = "automatic";
 
-        console.log(`Sundae: Applying theme [${theme}] as [${theme_id}]`);
-        document.documentElement.setAttribute('data-theme', theme_id);
+        const current_attr = document.documentElement.getAttribute('data-theme');
+        if (current_attr !== theme_id) {
+            console.log(`Sundae: Force applying theme [${theme}] -> [${theme_id}]`);
+            document.documentElement.setAttribute('data-theme', theme_id);
+        }
     };
 
-    // Initial apply
+    // 1. Immediate Apply
     apply_theme();
 
-    // Listen for realtime theme changes from server
-    frappe.realtime.on('theme_change', (data) => {
-        console.log("Sundae: Realtime theme change received:", data);
-        if (data && data.theme) {
-            frappe.boot.user.desk_theme = data.theme; // Update local state
-        }
-        setTimeout(apply_theme, 200);
+    // 2. Observer to prevent Frappe from overwriting our theme
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === "attributes" && mutation.attributeName === "data-theme") {
+                apply_theme();
+            }
+        });
     });
 
-    // 2. Navigation Redirects
-    frappe.router.on('change', () => {
-        if (frappe.get_route_str() === 'home') {
-            console.log("Sundae: Redirecting to newhome");
-            frappe.set_route('newhome');
-        }
-    });
+    observer.observe(document.documentElement, { attributes: true });
 
-    if (frappe.get_route_str() === 'home' || !frappe.get_route_str()) {
-        if (window.location.pathname.startsWith('/app')) frappe.set_route('newhome');
-    }
+    // 3. Fallback on Ready & Realtime
+    $(document).ready(function () {
+        console.log("Sundae: Document ready, re-verifying theme");
+        apply_theme();
 
-    // 3. Logo Fix (Return to Home)
-    $(document).on('click', '.navbar-brand, .app-logo', (e) => {
-        if (frappe.get_route_str() !== 'newhome') {
-            e.preventDefault();
-            frappe.set_route('newhome');
+        frappe.realtime.on('theme_change', (data) => {
+            console.log("Sundae: Realtime event received", data);
+            if (data && data.theme) {
+                if (frappe.boot && frappe.boot.user) frappe.boot.user.desk_theme = data.theme;
+                apply_theme();
+            }
+        });
+
+        // Navigation Redirects
+        frappe.router.on('change', () => {
+            if (frappe.get_route_str() === 'home') frappe.set_route('newhome');
+        });
+
+        if (frappe.get_route_str() === 'home' || !frappe.get_route_str()) {
+            if (window.location.pathname.startsWith('/app')) frappe.set_route('newhome');
         }
+
+        // Logo fix
+        $(document).on('click', '.navbar-brand, .app-logo', (e) => {
+            if (frappe.get_route_str() !== 'newhome') {
+                e.preventDefault();
+                frappe.set_route('newhome');
+            }
+        });
     });
-});
+})();
