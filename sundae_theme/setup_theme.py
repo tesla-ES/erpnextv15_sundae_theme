@@ -9,7 +9,7 @@ def after_migrate():
 
 def setup_user_theme_options():
 	"""Add custom themes to the User DocType's desk_theme field options."""
-	custom_themes = ["Cotton_candy", "Cherry", "Apricot", "Watermelon", "Odoo"]
+	custom_themes = ["cotton_candy", "cherry", "apricot", "watermelon", "odoo"]
 	
 	# Get the current options from the User DocType
 	# We use a Property Setter to stay clean and not modify core files directly
